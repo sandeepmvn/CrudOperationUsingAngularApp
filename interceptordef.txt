@@ -1,0 +1,48 @@
+HttpInterceptor was introduced with Angular 4.3. It provides a way to intercept HTTP requests and responses to transform or handle them before passing them along.
+
+
+// clone request and replace 'http://' with 'https://' at the same time
+const httpsReq = req.clone({
+  url: req.url.replace("http://", "https://")
+});
+
+return next.handle(httpsReq);
+
+Loader:-
+Everyone wants to see the spinning wheel of fortune when we are waiting for a response. What if I said we could set it up centrally in an interceptor so that we show a loader whenever there are active requests.
+For this, we can use a loader service that has a show and a hide function. Before we handle the request, we call the show method and through finalize we can hide the loader when done.
+
+const loaderService = this.injector.get(LoaderService);
+
+loaderService.show();
+
+return next.handle(req).pipe(
+  delay(5000),
+  finalize(() => loaderService.hide())
+);
+
+Headers
+We can do a lot by manipulating headers. Some things are:
+Authentication/authorization
+Caching behavior; for example, If-Modified-Since
+XSRF protection
+We can easily add headers to the request in the interceptor.
+
+const modified = req.clone({ 
+  setHeaders: { "X-Man": "Wolverine" } 
+});
+return next.handle(modified);
+
+Handling Errora
+
+return next.handle(req).pipe(
+  retry(2),
+  catchError((error: HttpErrorResponse) => {
+    if (error.status !== 401) {
+      // 401 handled in auth.interceptor
+      this.toastr.error(error.message);      
+    }
+    return throwError(error);
+  })
+);
+
