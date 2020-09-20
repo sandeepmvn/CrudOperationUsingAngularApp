@@ -1,0 +1,42 @@
+
+<div class="row">
+  <form>
+    <label for="name">Employee Name</label>
+    <input type="text" [(ngModel)]="employee.employeeName" name="name" id="name" class="form-control" /> <br>
+    <label for="employeeSalary">Employee Salary</label>
+    <input type="number" [(ngModel)]="employee.employeeSalary" name="employeeSalary" id="employeeSalary" class="form-control" /> <br>
+    <label for="employeeIsActive">IsActive: </label>
+    <input type="checkbox" [(ngModel)]="employee.isActive" name="employeeIsActive" id="employeeIsActive" />
+    <br />
+    <input type="button" value="Add Employee" name="addEmployee" (click)="addEmployee()" class="btn btn-primary" />
+    <input type="button" value="Update Employee" name="btnupdateEmployee" (click)="updateEmployee()" class="btn btn-info" />
+    
+  </form>
+</div>
+
+
+<hr />
+<table class="table table-bordered table-hover" *ngIf="!errormessage">
+  <tr>
+    <th>Employee Id</th>
+    <th>Employee Name</th>
+    <th>Employee Salary</th>
+    <th>Is Active</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let employee of employees">
+    <td>{{employee.pkemployeeId}}</td>
+    <td>{{employee.employeeName}}</td>
+    <td>{{employee.employeeSalary}}</td>
+    <td>{{employee.isActive}}</td>
+    <td>
+      <button class="btn btn-info" (click)="GetEmployee(employee)">Get</button>
+      <input type="button" value="Delete Employee" name="btndeleteEmployee" (click)="deleteEmployee(employee.pkemployeeId)" class="btn btn-danger" />
+    </td>
+  </tr>
+</table>
+
+<div class="alert alert-danger" *ngIf="errormessage">
+  <span>{{errormessage}}</span>
+  <button class="btn btn-primary" (click)="loadEmployess()"> Reload</button>
+</div>
